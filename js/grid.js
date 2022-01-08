@@ -26,7 +26,7 @@ Grid.prototype.fromState = function (state) {
 
     for (var y = 0; y < this.size; y++) {
       var tile = state[x][y];
-      row.push(tile ? new Tile(tile.position, tile.value) : null);
+      row.push(tile ? new Tile({x: tile.x, y: tile.y}, tile.value) : null);
     }
   }
 
@@ -115,3 +115,7 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
+
+Grid.prototype.copyGrid = function() {
+  const newGrid = new Grid();
+}

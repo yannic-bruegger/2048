@@ -10,25 +10,68 @@ function getAvailableMoves(grid) {
   return availableMoves.filter((move) => isMoveAvailable(grid, move));
 }
 
-function sumulateMove(gameState, direction){
-  var vector     = this.getVector(direction);
-  var traversals = this.buildTraversals(vector);
+function simulateMove(grid, direction){
+  const newGrid = Object.assign(grid);
+  var vector     = getVector(direction);
+  var traversals = buildTraversals(vector, newGrid);
   var moved      = false;
   var cell, tile;
 
-  let grid = new Grid(4, gameState.grid);
+  traversals.x.forEach(function (x) {
+    traversals.y.forEach(function (y) {
+      cell = { x: x, y: y };
+      tile = newGrid.cellContent(cell);
+
+      if (tile) {
+        var positions = findFarthestPosition(cell, vector, newGrid);
+        var next      = newGrid.cellContent(positions.next);
+
+        // Only one merger per row traversal?
+        if (next && next.value === tile.value && !next.mergedFrom) {
+          var merged = new Tile(positions.next, tile.value * 2);
+          merged.mergedFrom = [tile, next];
+
+          newGrid.insertTile(merged);
+          newGrid.removeTile(tile);
+
+          // Converge the two tiles' positions
+          tile.updatePosition(positions.next);
+
+          // Update the score
+          self.score += merged.value;
+
+          // The mighty 2048 tile
+          if (merged.value === 2048) self.won = true;
+        } else {
+          moveTile(tile, positions.farthest, newGrid);
+        }
+
+        if (!positionsEqual(cell, tile)) {
+          moved = true; // The tile moved from its original cell!
+        }
+      }
+    });
+  });
+  return newGrid;
 }
 
-function generateAllPossibleNextStatesWithProbability(){
-  return [
-  /* 
-    { probability: 0.9, gameState },
-    { probability: 0.9, gameState },
-    { probability: 0.9, gameState },
-    { probability: 0.9, gameState },
-    { probability: 0.9, gameState }
-  */
-  ];
+function generateAllPossibleNextStatesWithProbability(grid){
+  const possibleStates = [];
+  console.log(grid);
+  for(let x = 0; x < grid.size; x++){
+    for(let y = 0; y < grid.size; y++){
+      if(grid.cells[x][y] === null) {
+        const possibility2 = new Grid(grid.size, grid.cells);
+        const possibility4 = new Grid(grid.size, grid.cells);
+        possibility2.cells[x][y] = new Tile({x: x, y: y}, 2);
+        possibility4.cells[x][y] = new Tile({x: x, y: y}, 4);
+        possibleStates.push({ probability: 0.9, grid: possibility2 });
+        possibleStates.push({ probability: 0.1, grid: possibility4 });
+      } 
+    }
+  }
+  console.log(possibleStates)
+  return possibleStates;
 }
 
 function getVector(direction) {
@@ -65,4 +108,43 @@ function isMoveAvailable(grid, direction) {
   return false;
 };
 
+function buildTraversals(vector, grid) {
+  var traversals = { x: [], y: [] };
 
+  for (var pos = 0; pos < grid.size; pos++) {
+    traversals.x.push(pos);
+    traversals.y.push(pos);
+  }
+
+  // Always traverse from the farthest cell in the chosen direction
+  if (vector.x === 1) traversals.x = traversals.x.reverse();
+  if (vector.y === 1) traversals.y = traversals.y.reverse();
+
+  return traversals;
+};
+
+function findFarthestPosition(cell, vector, grid) {
+  var previous;
+
+  // Progress towards the vector direction until an obstacle is found
+  do {
+    previous = cell;
+    cell     = { x: previous.x + vector.x, y: previous.y + vector.y };
+  } while (grid.withinBounds(cell) &&
+           grid.cellAvailable(cell));
+
+  return {
+    farthest: previous,
+    next: cell // Used to check if a merge is required
+  };
+};
+
+function moveTile(tile, cell, grid) {
+  grid.cells[tile.x][tile.y] = null;
+  grid.cells[cell.x][cell.y] = tile;
+  tile.updatePosition(cell);
+};
+
+function positionsEqual(first, second) {
+  return first.x === second.x && first.y === second.y;
+};
