@@ -109,6 +109,7 @@ GameManager.prototype.serialize = function () {
   return {
     grid:        this.grid.serialize(),
     score:       this.score,
+    steps:       this.steps,
     over:        this.over,
     won:         this.won,
     keepPlaying: this.keepPlaying

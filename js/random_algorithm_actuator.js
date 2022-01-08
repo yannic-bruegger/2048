@@ -2,9 +2,10 @@ function RandomAlgorithmActuator(gameManager, interval) {
   this.events = {};
   const self = this;
   const id = setInterval(() => {
-    const direction = Math.floor(Math.random() * 4 + 0);
-    this.move(self, direction)
-    console.log(gameManager.movesAvailable());
+    const availableMoves = getAvailableMoves(gameManager.grid);
+    console.log(availableMoves);
+    const index = Math.floor(Math.random() * availableMoves.length + 0);
+    this.move(self, availableMoves[index])
     if(gameManager.over) clearInterval(id);
   }, interval);
 }
@@ -26,7 +27,6 @@ RandomAlgorithmActuator.prototype.emit = function (event, data) {
 };
 
 RandomAlgorithmActuator.prototype.move = function(self, direction) {
-  console.log(this);
   self.emit("move", direction);
 }
 
