@@ -1,6 +1,7 @@
 function RandomAlgorithmActuator(gameManager, interval) {
   this.events = {};
   const self = this;
+
   const id = setInterval(() => {
     const availableMoves = getAvailableMoves(gameManager.grid);
     console.log(availableMoves);
