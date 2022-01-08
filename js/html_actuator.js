@@ -46,8 +46,6 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
           min: 0,
         }
       });
-  
-      console.log(metadata.history);
     }
     init();
 
