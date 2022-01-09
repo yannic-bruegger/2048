@@ -77,6 +77,7 @@ function generateOnePosibleNextState(grid){
 
 function generateAllPossibleNextStatesWithProbability(grid){
   const possibleStates = [];
+  console.log(grid);
   for(let x = 0; x < grid.size; x++){
     for(let y = 0; y < grid.size; y++){
       if(grid.cells[x][y] === null) {

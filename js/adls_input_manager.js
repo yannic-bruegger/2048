@@ -1,6 +1,6 @@
 const DEPTH = 4; // 1 == depth 2
 
-function AdlsInputManager(gameManager, interval) {
+function AdlsInputManager(gameManager) {
   this.events = {};
   const self = this;
 
@@ -9,7 +9,7 @@ function AdlsInputManager(gameManager, interval) {
     const gameInterval = setInterval(() => {
       start(gameManager);
       if(gameManager.over) clearInterval(gameInterval);
-    }, interval);
+    }, 10);
   }, 200);
 
   function start (gameManager) {
@@ -42,7 +42,6 @@ function AdlsInputManager(gameManager, interval) {
       data = data.sort((a, b) => b.grid.score - a.grid.score)
 
       // Catch empty data
-      // console.log(data);
       if(data.length > 0) {
         const maxVal = data[0].grid.score
         data = data.filter(item => item.grid.score === maxVal)
