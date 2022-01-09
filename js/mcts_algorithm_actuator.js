@@ -8,9 +8,9 @@ MCTSAlgorithmActuator.prototype.run = function(){
   let id = setInterval(() => {
     const self = this;
     const availableMoves = getAvailableMoves(this.gameManager.grid);
-    let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 4);
-    counter++ > 300 ? clearInterval(id) : null;
-  }, 1000);
+    let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 100);
+    if(this.gameManager.over) clearInterval(id);
+  }, 100);
 }
 
 

@@ -12,7 +12,7 @@ class MCTSNode {
 
   getScore(){
     let scorePerVisit = 0;
-    const C = 1;
+    const C = 2;
     if (this.visits === 0) return Infinity;
     if (!this.parent) return 0;
 
@@ -37,6 +37,7 @@ class MCTS {
           // ROLLOUT
           let randomMove = getAvailableMoves(currentNode.grid).sort((a, b) => Math.random() > 0.5 ? 1 : -1)[0];
           let won = this.simulate(currentNode.grid, randomMove);
+          if(won)console.log("WON!", randomMove);
           do {
             currentNode.visits += 1;
             currentNode.wins += won;
