@@ -1,30 +1,67 @@
-function AdlsInputManager(GameManager) {
+const DEPTH = 2; // 1 == depth 2
+
+function AdlsInputManager(gameManager, interval) {
   this.events = {};
+  const self = this;
 
-  // if (window.navigator.msPointerEnabled) {
-  //   //Internet Explorer 10 style
-  //   this.eventTouchstart    = "MSPointerDown";
-  //   this.eventTouchmove     = "MSPointerMove";
-  //   this.eventTouchend      = "MSPointerUp";
-  // } else {
-  //   this.eventTouchstart    = "touchstart";
-  //   this.eventTouchmove     = "touchmove";
-  //   this.eventTouchend      = "touchend";
-  // }
+  setTimeout(function () {
+    gameManager.grid.score = 0;
+    const gameInterval = setInterval(() => {
+      start(gameManager);
+      if(gameManager.over) clearInterval(gameInterval);
+    }, interval);
+  }, 200);
 
+  function start (gameManager) {
+    generatePseudoTile(gridStructure(gameManager), 0, gameManager);
+  }
 
-  var self = this;
+  function gridStructure(grid) {
+    return [{grid: grid.grid, moves: []}]
+  }
 
-  // this.runGameTree(self);
+  function generatePseudoTile(data, depthLV, gameManager) {
 
-  // setInterval(this.runGameTree(self), 1000);
-  startAlgo = setInterval(function () {
-    self.runGameTree(self)
-    if (GameManager.over) {
-      clearInterval(startAlgo)
+    if (depthLV < DEPTH) {
+      const collectNewGrids = [];
+      // Jedes Grid (4 pro Ebene)
+      data.forEach((item) => {
+        // Jeder Move für current Grid
+        getAvailableMoves(item.grid).forEach((move) => {
+          const newGrid = simulateMove(item.grid, move)
+          collectNewGrids.push({grid: addRandomTile(newGrid), moves: item.moves.concat(move)})
+        });
+      });
+
+      depthLV++
+      generatePseudoTile(collectNewGrids, depthLV)
+
+    } else {
+      // Filter for best scores
+      data = data.filter(item => Object.keys(item.grid).indexOf('score') > -1)
+      data = data.sort((a, b) => b.grid.score - a.grid.score)
+
+      // Catch empty data
+      if (data !== []) {
+        const maxVal = data[0].grid.score
+        data = data.filter(item => item.grid.score === maxVal)
+
+        // Get the "best" move
+        const bestMoves = data.map((item) => {return item.moves[0]})
+        const countMoves = bestMoves.reduce((acc, value) => ({
+           ...acc,
+           [value]: (acc[value] || 0) + 1
+        }), {});
+        const bestMove = parseInt(Object.keys(countMoves).reduce(function(a, b){ return countMoves[a] > countMoves[b] ? a : b }));
+
+        // Move Tile
+        self.move(self, bestMove)
+      }
     }
-  }, 100);
+  }
+
 }
+
 
 AdlsInputManager.prototype.on = function (event, callback) {
   if (!this.events[event]) {
@@ -42,11 +79,14 @@ AdlsInputManager.prototype.emit = function (event, data) {
   }
 };
 
-AdlsInputManager.prototype.runGameTree = function (self) {
-  console.log(self);
-  self.emit("move", Math.floor(Math.random() * 4));
+AdlsInputManager.prototype.move = function(self, direction) {
+  self.emit("move", direction);
 }
 
-AdlsInputManager.prototype.nextMoves = function (self) {
+AdlsInputManager.prototype.restart = function () {
+  this.emit("restart");
+};
 
-}
+AdlsInputManager.prototype.keepPlaying = function () {
+  this.emit("keepPlaying");
+};
