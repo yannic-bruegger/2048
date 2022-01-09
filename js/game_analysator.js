@@ -64,12 +64,16 @@ function addRandomTile(grid) {
   if (grid.cellsAvailable()) {
     var value = Math.random() < 0.9 ? 2 : 4;
     var tile = new Tile(grid.randomAvailableCell(), value);
-
     grid.insertTile(tile);
-
     return grid;
   }
 };
+
+function generateOnePosibleNextState(grid){
+  let newGrid = new Grid(grid.size, grid.cells);
+  addRandomTile(newGrid);
+  return newGrid;
+}
 
 function generateAllPossibleNextStatesWithProbability(grid){
   const possibleStates = [];
@@ -164,3 +168,9 @@ function moveTile(tile, cell, grid) {
 function positionsEqual(first, second) {
   return first.x === second.x && first.y === second.y;
 };
+
+function is2048reached(grid) {
+  let found2048 = false;
+  grid.eachCell((cell) => { if (cell.value === 2048) found2048 = true;});
+  return found2048;
+}

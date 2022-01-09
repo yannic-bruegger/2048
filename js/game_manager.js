@@ -11,7 +11,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
   this.setup();
-  this.inputManager.run();
+  // this.inputManager.run();
 }
 
 // Restart the game
