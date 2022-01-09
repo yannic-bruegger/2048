@@ -55,9 +55,14 @@ function simulateMove(grid, direction){
   return newGrid;
 }
 
+function generateOnePosibleNextState(grid){
+  let newGrid = new Grid(grid.size, grid.cells);
+  newGrid.addRandomTile();
+  return newGrid;
+}
+
 function generateAllPossibleNextStatesWithProbability(grid){
   const possibleStates = [];
-  console.log(grid);
   for(let x = 0; x < grid.size; x++){
     for(let y = 0; y < grid.size; y++){
       if(grid.cells[x][y] === null) {
@@ -148,3 +153,17 @@ function moveTile(tile, cell, grid) {
 function positionsEqual(first, second) {
   return first.x === second.x && first.y === second.y;
 };
+
+function addRandomTile(grid) {
+  if (grid.cellsAvailable()) {
+    var value = Math.random() < 0.9 ? 2 : 4;
+    var tile = new Tile(grid.randomAvailableCell(), value);
+    grid.insertTile(tile);
+  }
+};
+
+function is2048reached(grid) {
+  let found2048 = false;
+  grid.eachCell((cell) => { if (cell.value === 2048) found2048 = true;});
+  return found2048;
+}
