@@ -1,6 +1,7 @@
 function GameManager(size, InputManager, Actuator, StorageManager) {
+  this.events = {};
   this.size           = size; // Size of the grid
-  this.inputManager   = new InputManager(this, 1000);
+  this.inputManager   = new InputManager(this);
   this.storageManager = new StorageManager;
   this.actuator       = new Actuator;
 
@@ -11,7 +12,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
   this.setup();
-  // this.inputManager.run();
+  this.inputManager.run();
 }
 
 // Restart the game
@@ -89,6 +90,16 @@ GameManager.prototype.actuate = function () {
   // Clear the state when the game is over (game over only, not win)
   if (this.over) {
     this.storageManager.clearGameState();
+    this.emit('finish', {
+      score:      this.score,
+      steps:      this.steps,
+      over:       this.over,
+      won:        this.won,
+      reached2048: this.reached2048,
+      history:    this.history,
+      bestScore:  this.storageManager.getBestScore(),
+      terminated: this.isGameTerminated()
+    });
   } else {
     this.storageManager.setGameState(this.serialize());
   }
@@ -102,7 +113,6 @@ GameManager.prototype.actuate = function () {
     bestScore:  this.storageManager.getBestScore(),
     terminated: this.isGameTerminated()
   });
-
 };
 
 // Represent the current game as an object
@@ -175,7 +185,10 @@ GameManager.prototype.move = function (direction) {
           self.score += merged.value;
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true;
+          if (merged.value === 2048) {
+            self.won = true;
+            self.reached2048 = self.steps + 1;
+          }
         } else {
           self.moveTile(tile, positions.farthest);
         }
@@ -279,4 +292,20 @@ GameManager.prototype.tileMatchesAvailable = function () {
 
 GameManager.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y;
+};
+
+GameManager.prototype.on = function (event, callback) {
+  if (!this.events[event]) {
+    this.events[event] = [];
+  }
+  this.events[event].push(callback);
+};
+
+GameManager.prototype.emit = function (event, data) {
+  var callbacks = this.events[event];
+  if (callbacks) {
+    callbacks.forEach(function (callback) {
+      callback(data);
+    });
+  }
 };

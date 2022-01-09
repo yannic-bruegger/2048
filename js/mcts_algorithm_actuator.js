@@ -1,16 +1,18 @@
 function MCTSAlgorithmActuator(gameManager) {
   this.events = {};
   this.gameManager = gameManager;
+  const self = this;
+  setTimeout(() => {
+    let id = setInterval(() => {
+      const availableMoves = getAvailableMoves(this.gameManager.grid);
+      let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 100);
+      if(this.gameManager.won) self.emit('keepPlaying');
+      if(this.gameManager.over) clearInterval(id);
+    }, 10);
+  }, 200);
 }
 
 MCTSAlgorithmActuator.prototype.run = function(){
-  let counter = 0;
-  let id = setInterval(() => {
-    const self = this;
-    const availableMoves = getAvailableMoves(this.gameManager.grid);
-    let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 100);
-    if(this.gameManager.over) clearInterval(id);
-  }, 100);
 }
 
 

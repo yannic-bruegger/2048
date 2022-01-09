@@ -1,14 +1,17 @@
-function RandomAlgorithmActuator(gameManager, interval) {
+function RandomAlgorithmActuator(gameManager) {
   this.events = {};
   const self = this;
 
   const id = setInterval(() => {
     const availableMoves = getAvailableMoves(gameManager.grid);
-    console.log(availableMoves);
     const index = Math.floor(Math.random() * availableMoves.length + 0);
     this.move(self, availableMoves[index])
+    if(gameManager.won) self.emit('keepPlaying');
     if(gameManager.over) clearInterval(id);
-  }, interval);
+  }, 100);
+}
+
+RandomAlgorithmActuator.prototype.run = function (event, callback) {
 }
 
 RandomAlgorithmActuator.prototype.on = function (event, callback) {

@@ -11,17 +11,17 @@ function getAvailableMoves(grid) {
 }
 
 function simulateMove(grid, direction){
-  const newGrid = new Grid(grid.size, grid.cells);
+  const newGrid = new Grid(grid.size, grid.cells, grid.score);
   var vector     = getVector(direction);
   var traversals = buildTraversals(vector, newGrid);
   var moved      = false;
   var cell, tile;
-
+  
   traversals.x.forEach(function (x) {
     traversals.y.forEach(function (y) {
       cell = { x: x, y: y };
       tile = newGrid.cellContent(cell);
-
+      
       if (tile) {
         var positions = findFarthestPosition(cell, vector, newGrid);
         var next      = newGrid.cellContent(positions.next);
@@ -38,7 +38,7 @@ function simulateMove(grid, direction){
           tile.updatePosition(positions.next);
 
           // Update the score
-          if (!newGrid.score) {
+          if (newGrid.score === undefined) {
             newGrid.score = 0;
           } else {
             newGrid.score = newGrid.score + merged.value;
