@@ -1,14 +1,18 @@
-function MCTSAlgorithmActuator(gameManager, interval) {
+function MCTSAlgorithmActuator(gameManager) {
   this.events = {};
-  const self = this;
-
-  const id = setInterval(() => {
-    const availableMoves = getAvailableMoves(gameManager.grid);
-    let move = getNextMctsMove(availableMoves, grid, 1);
-    this.move(self, move);
-    if(gameManager.over) clearInterval(id);
-  }, interval);
+  this.gameManager = gameManager;
 }
+
+MCTSAlgorithmActuator.prototype.run = function(){
+  let counter = 0;
+  let id = setInterval(() => {
+    const self = this;
+    const availableMoves = getAvailableMoves(this.gameManager.grid);
+    let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 4);
+    counter++ > 300 ? clearInterval(id) : null;
+  }, 1000);
+}
+
 
 MCTSAlgorithmActuator.prototype.on = function (event, callback) {
   if (!this.events[event]) {
@@ -39,7 +43,8 @@ MCTSAlgorithmActuator.prototype.keepPlaying = function () {
 };
 
 MCTSAlgorithmActuator.prototype.getNextMctsMove = function(availableMoves, grid, rounds) {
-  let tree = new Node(undefined, grid, availableMoves);
-  return MCTS(tree, rounds).bestMove();
+  let tree = new MCTSNode(undefined, grid, availableMoves, undefined);
+  this.move(this, (new MCTS(tree, rounds)).getBestMove());
+  return;
 }
 

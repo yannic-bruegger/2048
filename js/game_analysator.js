@@ -57,7 +57,7 @@ function simulateMove(grid, direction){
 
 function generateOnePosibleNextState(grid){
   let newGrid = new Grid(grid.size, grid.cells);
-  newGrid.addRandomTile();
+  addRandomTile(newGrid);
   return newGrid;
 }
 
