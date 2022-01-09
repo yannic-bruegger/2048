@@ -11,7 +11,7 @@ function getAvailableMoves(grid) {
 }
 
 function simulateMove(grid, direction){
-  const newGrid = Object.assign(grid);
+  const newGrid = new Grid(grid.size, grid.cells);
   var vector     = getVector(direction);
   var traversals = buildTraversals(vector, newGrid);
   var moved      = false;
@@ -38,7 +38,12 @@ function simulateMove(grid, direction){
           tile.updatePosition(positions.next);
 
           // Update the score
-          self.score += merged.value;
+          if (!newGrid.score) {
+            newGrid.score = 0;
+          } else {
+            newGrid.score = newGrid.score + merged.value;
+          }
+
 
           // The mighty 2048 tile
           if (merged.value === 2048) self.won = true;
@@ -55,6 +60,17 @@ function simulateMove(grid, direction){
   return newGrid;
 }
 
+function addRandomTile(grid) {
+  if (grid.cellsAvailable()) {
+    var value = Math.random() < 0.9 ? 2 : 4;
+    var tile = new Tile(grid.randomAvailableCell(), value);
+
+    grid.insertTile(tile);
+
+    return grid;
+  }
+};
+
 function generateAllPossibleNextStatesWithProbability(grid){
   const possibleStates = [];
   console.log(grid);
@@ -67,7 +83,7 @@ function generateAllPossibleNextStatesWithProbability(grid){
         possibility4.cells[x][y] = new Tile({x: x, y: y}, 4);
         possibleStates.push({ probability: 0.9, grid: possibility2 });
         possibleStates.push({ probability: 0.1, grid: possibility4 });
-      } 
+      }
     }
   }
   console.log(possibleStates)
