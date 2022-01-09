@@ -1,4 +1,4 @@
-const DEPTH = 4; // 1 == depth 2
+const DEPTH = 6; // 1 == depth 2
 
 function AdlsInputManager(gameManager) {
   this.events = {};
@@ -40,7 +40,8 @@ function AdlsInputManager(gameManager) {
     } else {
       // Filter for best scores
       data = data.filter(item => Object.keys(item.grid).indexOf('score') > -1)
-      data = data.sort((a, b) => b.grid.score - a.grid.score)
+      // data = data.sort((a, b) => b.grid.score - a.grid.score)
+      data = data.sort((a, b) => a.grid.score - b.grid.score)
 
       // Catch empty data
       if(data.length > 0) {
