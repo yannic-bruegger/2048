@@ -115,7 +115,3 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
-
-Grid.prototype.copyGrid = function() {
-  const newGrid = new Grid();
-}
