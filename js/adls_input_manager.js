@@ -1,4 +1,4 @@
-const DEPTH = 2; // 1 == depth 2
+const DEPTH = 4; // 1 == depth 2
 
 function AdlsInputManager(gameManager, interval) {
   this.events = {};
@@ -42,7 +42,8 @@ function AdlsInputManager(gameManager, interval) {
       data = data.sort((a, b) => b.grid.score - a.grid.score)
 
       // Catch empty data
-      if (data !== []) {
+      // console.log(data);
+      if(data.length > 0) {
         const maxVal = data[0].grid.score
         data = data.filter(item => item.grid.score === maxVal)
 
@@ -56,6 +57,8 @@ function AdlsInputManager(gameManager, interval) {
 
         // Move Tile
         self.move(self, bestMove)
+      } else {
+        self.move(self, Math.floor(Math.random() * 4))
       }
     }
   }
