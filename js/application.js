@@ -12,8 +12,11 @@ window.requestAnimationFrame(function () {
   gm = new GameManager(4, MCTSAlgorithmActuator, HTMLActuator, LocalStorageManager);
   gm.on('finish', (data) => {
     logs.push(data);
-    console.log(logs);
-    if(adlsCounter < adlsRuns) gm.inputManager.restart();
+    if(adlsCounter < adlsRuns) {
+      gm.inputManager.restart();
+    } else {
+      console.log(logs);
+    }
     adlsCounter++;
   })
 });
