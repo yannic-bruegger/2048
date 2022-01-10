@@ -1,4 +1,4 @@
-const DEPTH = 6; // 1 == depth 2
+const DEPTH = 4; // 1 == depth 2
 
 function AdlsInputManager(gameManager) {
   this.events = {};
@@ -8,7 +8,7 @@ function AdlsInputManager(gameManager) {
     gameManager.grid.score = 0;
     const gameInterval = setInterval(() => {
       start(gameManager);
-      if(gameManager.won) self.emit("keepPlaying");
+      if(gameManager.won) self.emit('keepPlaying');
       if(gameManager.over) clearInterval(gameInterval);
     }, 10);
   }, 200);
@@ -40,8 +40,8 @@ function AdlsInputManager(gameManager) {
     } else {
       // Filter for best scores
       data = data.filter(item => Object.keys(item.grid).indexOf('score') > -1)
-      // data = data.sort((a, b) => b.grid.score - a.grid.score)
-      data = data.sort((a, b) => a.grid.score - b.grid.score)
+      data = data.sort((a, b) => b.grid.score - a.grid.score)
+      // data = data.sort((a, b) => a.grid.score - b.grid.score)
 
       // Catch empty data
       if(data.length > 0) {
@@ -66,8 +66,9 @@ function AdlsInputManager(gameManager) {
 
 }
 
-AdlsInputManager.prototype.run = function (event, callback) {
-}
+AdlsInputManager.prototype.run = function () {
+
+};
 
 AdlsInputManager.prototype.on = function (event, callback) {
   if (!this.events[event]) {
