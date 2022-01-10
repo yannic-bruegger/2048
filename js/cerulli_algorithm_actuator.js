@@ -91,8 +91,8 @@ CerulliAlgorithmActuator.prototype.askCerulliForMove = function(grid, availableM
     let isBottomLeftFilled = grid.cells[0][3] != null;
     let isTopRightFilled = grid.cells[3][3] != null;
     if(!isTopRightFilled && !isBottomLeftFilled) return Moves.RIGHT;
-    if(isTopRightFilled && (getAvailableMoves(grid).indexOf(Moves.RIGHT) >= -1)) return Moves.RIGHT;
-    if(isBottomLeftFilled && (getAvailableMoves(grid).indexOf(Moves.DOWN) >= -1)) return Moves.DOWN;
+    if(isTopRightFilled && (getAvailableMoves(grid).indexOf(Moves.RIGHT) > -1)) return Moves.RIGHT;
+    if(isBottomLeftFilled && (getAvailableMoves(grid).indexOf(Moves.DOWN) > -1)) return Moves.DOWN;
     if(isTopRightFilled && !isBottomLeftFilled) return Moves.DOWN;
     if(!isTopRightFilled && isBottomLeftFilled) return Moves.RIGHT;
   }
