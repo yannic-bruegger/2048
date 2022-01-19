@@ -74,6 +74,30 @@
     </div>
   </div>
   <div class="container analysis">
+    <div class="control-bar">
+      <span class="input-container">
+        <label>Algorithm</label>
+        <select id="algorithm">
+          <option>Play manually</option>
+          <option>MCTS</option>
+          <option>ADLS</option>
+          <option>Random</option>
+          <option>Cerulli</option>
+        </select>
+      </span>
+      <span class="input-container">
+        <label>Repeats</label>
+        <input type="number" value="4" id="repeats">
+      </span>
+      <span class="input-container">
+        <label>&nbsp;</label>
+        <input type="submit" onclick="startGame()" value="Start" id="start">
+      </span>
+      <span class="input-container">
+        <label>&nbsp;</label>
+        <input type="submit" onclick="stopGame()" value="Clear" id="stop">
+      </span>
+    </div>
     <div id="visualizer"></div>
   </div>
 

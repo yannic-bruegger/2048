@@ -1,4 +1,4 @@
-function CerulliAlgorithmActuator(gameManager, interval) {
+function CerulliAlgorithmActuator(gameManager) {
   this.events = {};
   this.gameManager = gameManager;
   const self = this;
@@ -12,8 +12,8 @@ function CerulliAlgorithmActuator(gameManager, interval) {
      if(this.gameManager.won) self.emit('keepPlaying');
      if(this.gameManager.over) clearInterval(id);
 
-   }, 10);
-  }, 200);
+   }, 100);
+  }, 100);
 }
 
 CerulliAlgorithmActuator.prototype.run = function() {

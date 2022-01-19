@@ -8,8 +8,8 @@ function MCTSAlgorithmActuator(gameManager) {
       let move = this.getNextMctsMove(availableMoves, this.gameManager.grid, 100);
       if(this.gameManager.won) self.emit('keepPlaying');
       if(this.gameManager.over) clearInterval(id);
-    }, 10);
-  }, 200);
+    }, 100);
+  }, 100);
 }
 
 MCTSAlgorithmActuator.prototype.run = function(){

@@ -1,4 +1,4 @@
-function KeyboardInputManager() {
+function KeyboardInputManager(gameManager) {
   this.events = {};
 
   if (window.navigator.msPointerEnabled) {

@@ -10,8 +10,8 @@ function AdlsInputManager(gameManager) {
       start(gameManager);
       if(gameManager.won) self.emit('keepPlaying');
       if(gameManager.over) clearInterval(gameInterval);
-    }, 10);
-  }, 200);
+    }, 100);
+  }, 100);
 
   function start (gameManager) {
     generatePseudoTile(gridStructure(gameManager), 0, gameManager);
