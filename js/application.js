@@ -3,8 +3,8 @@ let gm = undefined;
 const inputManagers = {
   'Play manually': KeyboardInputManager,
   'Random': RandomAlgorithmActuator,
-  'ADLS': AdlsInputManager,
   'MCTS': MCTSAlgorithmActuator,
+  'ADLS': AdlsInputManager,
   'Cerulli': CerulliAlgorithmActuator,
 }
 
